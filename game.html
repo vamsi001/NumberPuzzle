@@ -1,0 +1,239 @@
+<html>
+
+
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <script type="text/javascript">
+
+
+  function gameFunction() {
+    var self = this;
+
+
+
+    sample();
+
+
+    var dropDownValue=  $( "#selectDropdown" );
+    for(var i=3;i<10;i++){
+      dropDownValue.append("<option >"+i+"</option>");
+    }
+  //  tableCellOnclick();
+  $(document).off("click", "td.tableCell").on("click", "td.tableCell", function(evt){
+
+    cellMethod(evt.target);
+  });
+    //$("td").iWouldLikeToAbsolutelyPositionThingsInsideOfFrickingTableCellsPlease();
+
+  }
+
+
+function getRandomizer(bottom, top,arrayOfNumbers) {
+
+      if(arrayOfNumbers.length<top){
+      var p= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+      while(arrayOfNumbers.indexOf(p)>-1){
+        p= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+      }
+    }else{
+      p='';
+    }
+
+      return p;
+
+}
+
+
+function cellMethod(value){
+
+  var nodeValue=$(value).text();
+  if(nodeValue){
+
+  var index=$(value).index();
+  var nextTD="0";
+  var prevTD="0";
+  var topVar="0";
+  var bottomVar="0";
+  var swapped = "false";
+
+  if((index+1)!=$( "#selectDropdown" ).val()){
+
+   nextTD = $(value).closest("td").next("td").text();
+  }
+
+  if(index!=0){
+   prevTD=$(value).closest("td").prev("td").text();
+
+  }
+   if($(value).closest("tr").next("tr").text()){
+
+   topVar=$(value).closest("tr").next("tr").children('td:nth-child(' + ($(value).index()+1)+ ')').text();
+
+ }
+if($(value).closest("tr").prev("tr").text()){
+
+  bottomVar=bottomVar=$(value).closest("tr").prev("tr").children('td:nth-child(' + ($(value).index()+1)+ ')').text();
+}
+
+
+if(!nextTD){
+
+  $(value).closest("td").next("td").html($(value).text());
+  swapped="true";
+
+
+}if(!prevTD){
+  $(value).closest("td").prev("td").html($(value).text());
+  swapped="true";
+}
+
+if(!topVar){
+  $(value).closest("tr").next("tr").children('td:nth-child(' + ($(value).index()+1)+ ')').html($(value).text());
+  swapped="true";
+}
+
+if(!bottomVar){
+  $(value).closest("tr").prev("tr").children('td:nth-child(' + ($(value).index()+1)+ ')').html($(value).text());
+  swapped="true";
+}
+
+if(swapped=="true"){
+$(value).html("");
+}
+
+
+
+
+}
+
+
+}
+
+
+
+  function sample(){
+
+    $( "#selectDropdown" ).change(function() {
+      $("#gameTableBody").remove();
+      var value=$( "#selectDropdown" ).val();
+      var gameTable=$("#gameTable");
+
+    var p=1;
+    var arrayOfNumbers=[];
+    var newRows = "";
+    newRows=newRows+'<tbody id="gameTableBody">';
+    for(var i=0;i<value;i++){
+    //  gameTable
+
+    newRows=newRows+'<tr>';
+    for(var j=0;j<value;j++){
+
+      p= getRandomizer(1, (value*value)-1,arrayOfNumbers);
+      arrayOfNumbers.push(p);
+      newRows=newRows+'<td class="tableCell">'+p+'</td>';
+    /*  if(p==(value*value)){
+        newRows=newRows+'<td class="tableCell" onClick="cellMethod(this)"></td>';
+      }else{
+      newRows=newRows+'<td class="tableCell" onClick="cellMethod(this)">'+p+'</td>';
+    }
+    p=p+1;*/
+
+    }
+    newRows=newRows+"</tr>";
+    }
+
+    newRows=newRows+'</tbody>';
+
+    gameTable.append(newRows);
+  });
+
+
+  }
+
+
+  $.fn.iWouldLikeToAbsolutelyPositionThingsInsideOfFrickingTableCellsPlease = function() {
+    var $el;
+    return this.each(function() {
+      $el = $(this);
+      var newDiv = $("<div />", {
+        "class": "innerWrapper",
+        "css"  : {
+          "height"  : $el.height(),
+          "width"   : "100%",
+          "position": "relative"
+        }
+      });
+      $el.wrapInner(newDiv);
+    });
+};
+
+
+
+  </script>
+
+<style>
+
+table, th, td {
+   border: 1px solid black;
+}
+
+.tableCell:hover{
+  cursor: pointer;
+  color:grey;
+
+}
+
+#tableDiv{
+  position: relative;
+  width:50%;display:block;
+  position: relative;
+left: 10%;
+top: 10%;
+margin-left: 20%;
+
+}
+
+td .tableCell {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background:gold;
+}
+
+td {
+
+  text-align: center;
+  vertical-align: middle;
+}
+td:after{
+    content:'';
+    display:block;
+    margin-top:100%;
+}
+
+table {
+    width:50%;
+}
+</style>
+
+</head>
+
+<body onload="gameFunction()">
+<h1>Enter the matrix size for the Game.</h2>
+  <select id="selectDropdown" >
+
+</select>
+<div id="tableDiv">
+<table id="gameTable">
+</table>
+</div>
+
+
+
+
+</body>
+
+</html>
